@@ -2,6 +2,7 @@
 # Run: streamlit run app.py
 
 import html
+import re
 from datetime import datetime
 
 import pandas as pd
@@ -33,7 +34,7 @@ st.markdown(f"""
 
 /* Instruction line */
 .inst {{
-  font-size: 1.05rem;           /* ≈16–17px */
+  font-size: 1.05rem;
   color: #374151;
   margin: 4px 0 10px 2px;
   line-height: 1.4;
@@ -43,7 +44,7 @@ st.markdown(f"""
 .fb{{
   display:flex; gap:12px; align-items:center;
   padding:14px 16px; border-radius:10px; border:1px solid;
-  margin:12px 0 18px 0;             /* separate from history */
+  margin:12px 0 18px 0;
   font-size:1.06rem; line-height:1.5;
 }}
 .fb--ok  {{ background:#E8FAF0; border-color:#B7E2C2; color:#14532D; border-left:6px solid #16A34A; }}
@@ -57,26 +58,28 @@ st.markdown(f"""
 
 /* History panels */
 .history-wrap{{ border:1px solid #e5e7eb; border-radius:10px; padding:8px; }}
-.history-scroll{{ max-height: 320px; overflow-y:auto; padding-right:8px; }}
+.history-scroll{{ max-height: 360px; overflow-y:auto; padding-right:8px; }}
 .hist-card{{ border:1px solid #eef0f2; border-radius:10px; padding:10px 12px; margin:10px 0; background:#fff; }}
 .hist-title{{ display:flex; justify-content:space-between; gap:8px; font-size:0.95rem; }}
 .badge-pass{{ background:#e6f6ea; color:#166534; padding:2px 8px; border-radius:999px; font-weight:600; }}
 .badge-fail{{ background:#fff7ed; color:#9a3412; padding:2px 8px; border-radius:999px; font-weight:600; }}
 .badge-claim{{ background:#eff6ff; color:#1d4ed8; padding:2px 8px; border-radius:999px; }}
-.hist-body blockquote{{ margin:6px 0; padding:6px 10px; background:#f8fafc; border-left:3px solid #cbd5e1; }}
 .smallnote{{ color:#6b7280; font-size:0.9rem; }}
 .section-label{{ font-weight:600; color:#374151; margin-top:6px; }}
+.hist-body blockquote{{ margin:6px 0; padding:6px 10px; background:#f8fafc; border-left:3px solid #cbd5e1; }}
+.kv{{ display:grid; grid-template-columns: 160px 1fr; gap:6px 10px; margin:8px 0; }}
+.kv div:nth-child(odd){{ color:#6b7280; }}
 </style>
 <div class="app-header"><h1>{TITLE_TEXT}</h1></div>
 """, unsafe_allow_html=True)
 
 # ---------- Small helpers ----------
 def _esc_html(s: str) -> str:
-    if not s: return ""
+    if not s:
+        return ""
     return html.escape(s).replace("\n", "<br>")
 
 def show_feedback_bar(text: str, passed: bool = True, who: str = "Tutor feedback"):
-    """Render a callout feedback bar with robot icon and left color rail."""
     icon_html = "🤖"
     klass = "fb--ok" if passed else "fb--warn"
     html_box = f"""
@@ -87,66 +90,75 @@ def show_feedback_bar(text: str, passed: bool = True, who: str = "Tutor feedback
     """
     st.markdown(html_box, unsafe_allow_html=True)
 
-def _render_evidence_history(records, claim_label):
-    if not records:
-        st.caption("No attempts yet for this claim. Submit to see history here.")
+def show_feedback_turns(text: str, passed: bool = True, who: str = "Tutor feedback"):
+    if not text:
         return
-    html_cards = ['<div class="history-wrap"><div class="history-scroll">']
-    for idx, r in enumerate(reversed(records), start=1):
-        badge = "badge-pass" if r["passed"] else "badge-fail"
-        status = "Passed" if r["passed"] else "Needs work"
-        conf_txt = f'{r.get("confidence",0):.2f}' if isinstance(r.get("confidence"), (int,float)) else ""
-        label_txt = r.get("label","")
-        html_cards.append(
-            f'<div class="hist-card">'
-            f'  <div class="hist-title">'
-            f'    <div><strong>Attempt #{len(records)-idx+1}</strong> • <span class="smallnote">{r["ts"]}</span></div>'
-            f'    <div><span class="{badge}">{status}</span> <span class="badge-claim">{claim_label}</span></div>'
-            f'  </div>'
-            f'  <div class="smallnote">Label: {label_txt}{(" • Conf: "+conf_txt) if conf_txt else ""}</div>'
-            f'  <div class="hist-body">'
-            f'    <div class="section-label">Your claim</div>'
-            f'    <blockquote>{_esc_html(claim_label)}</blockquote>'
-            f'    <div class="section-label">Your evidence</div>'
-            f'    <blockquote>{_esc_html(r["text"]) if r["text"] else "<i>(empty)</i>"}</blockquote>'
-            f'    <div class="section-label">Feedback</div>'
-            f'    <blockquote>{_esc_html(r["feedback"])}</blockquote>'
-            f'  </div>'
-            f'</div>'
-        )
-    html_cards.append('</div></div>')
-    st.markdown("".join(html_cards), unsafe_allow_html=True)
 
-def _render_reasoning_history(records, claim_label):
+    pattern = re.compile(r"(Turn\s+\d+:)")
+    matches = list(pattern.finditer(text))
+
+    if not matches:
+        show_feedback_bar(text, passed=passed, who=who)
+        return
+
+    segments = []
+    for i, m in enumerate(matches):
+        start = m.start()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        seg = text[start:end].strip()
+        if seg:
+            segments.append(seg)
+
+    for seg in segments:
+        seg_clean = re.sub(r"^Turn\s+\d+:\s*", "", seg, flags=re.IGNORECASE)
+        show_feedback_bar(seg_clean, passed=passed, who=who)
+
+def _passed_from_pred(pred: dict) -> bool:
+    if not isinstance(pred, dict):
+        return True
+    ev = (pred.get("evidence") or "").lower()
+    rs = (pred.get("reasoning") or "").lower()
+    return ("supportive" in ev) and ("supportive" in rs or "valid" in rs)
+
+def _render_attempt_history(records, claim_label: str):
     if not records:
         st.caption("No attempts yet for this claim. Submit to see history here.")
         return
+
     html_cards = ['<div class="history-wrap"><div class="history-scroll">']
     for idx, r in enumerate(reversed(records), start=1):
-        badge = "badge-pass" if r["passed"] else "badge-fail"
-        status = "Passed" if r["passed"] else "Needs work"
-        conf_txt = f'{r.get("confidence",0):.2f}' if isinstance(r.get("confidence"), (int,float)) else ""
-        label_txt = r.get("label","")
-        ev_snap = r.get("evidence", "")
+        pred = r.get("predicted_labels") or {}
+        passed = _passed_from_pred(pred)
+        badge = "badge-pass" if passed else "badge-fail"
+        status = "Passed" if passed else "Needs work"
+
+        ev_text = r.get("evidence_text", "")
+        rs_text = r.get("reasoning_text", "")
+        fb_text = r.get("feedback", "")
+
         html_cards.append(
             f'<div class="hist-card">'
             f'  <div class="hist-title">'
-            f'    <div><strong>Attempt #{len(records)-idx+1}</strong> • <span class="smallnote">{r["ts"]}</span></div>'
+            f'    <div><strong>Attempt #{len(records)-idx+1}</strong> • <span class="smallnote">{r.get("ts","")}</span></div>'
             f'    <div><span class="{badge}">{status}</span> <span class="badge-claim">{claim_label}</span></div>'
             f'  </div>'
-            f'  <div class="smallnote">Label: {label_txt}{(" • Conf: "+conf_txt) if conf_txt else ""}</div>'
+            f'  <div class="kv">'
+            f'    <div>Claim</div><div>{_esc_html(str(pred.get("claim","")) )}</div>'
+            f'    <div>Evidence</div><div>{_esc_html(str(pred.get("evidence","")) )}</div>'
+            f'    <div>Reasoning</div><div>{_esc_html(str(pred.get("reasoning","")) )}</div>'
+            f'    <div>Pattern</div><div>{_esc_html(str(pred.get("reasoning_pattern","")) )}</div>'
+            f'  </div>'
             f'  <div class="hist-body">'
-            f'    <div class="section-label">Your claim</div>'
-            f'    <blockquote>{_esc_html(claim_label)}</blockquote>'
-            f'    <div class="section-label">Your evidence (snapshot)</div>'
-            f'    <blockquote>{_esc_html(ev_snap) if ev_snap else "<i>(empty)</i>"}</blockquote>'
+            f'    <div class="section-label">Your evidence</div>'
+            f'    <blockquote>{_esc_html(ev_text) if ev_text else "<i>(empty)</i>"}</blockquote>'
             f'    <div class="section-label">Your reasoning</div>'
-            f'    <blockquote>{_esc_html(r["text"]) if r["text"] else "<i>(empty)</i>"}</blockquote>'
+            f'    <blockquote>{_esc_html(rs_text) if rs_text else "<i>(empty)</i>"}</blockquote>'
             f'    <div class="section-label">Feedback</div>'
-            f'    <blockquote>{_esc_html(r["feedback"])}</blockquote>'
+            f'    <blockquote>{_esc_html(fb_text) if fb_text else "<i>(empty)</i>"}</blockquote>'
             f'  </div>'
             f'</div>'
         )
+
     html_cards.append('</div></div>')
     st.markdown("".join(html_cards), unsafe_allow_html=True)
 
@@ -160,37 +172,21 @@ def init_state():
     ss.setdefault("evidence_text", "")
     ss.setdefault("reasoning_text", "")
 
-    ss.setdefault("evidence_ok", False)
-    ss.setdefault("reasoning_ok", False)
-    ss.setdefault("evidence_fb", "")
-    ss.setdefault("reasoning_fb", "")
+    ss.setdefault("attempt_history", [])
+
+    ss.setdefault("last_feedback", "")
+    ss.setdefault("last_predicted", None)
 
     ss.setdefault("submitted", False)
 
-    ss.setdefault("evidence_history", [])
-    ss.setdefault("reasoning_history", [])
 init_state()
 
 def reset_after_claim_change(keep_text=True):
     if not keep_text:
         st.session_state.evidence_text = ""
         st.session_state.reasoning_text = ""
-    st.session_state.evidence_ok = False
-    st.session_state.reasoning_ok = False
-    st.session_state.evidence_fb = ""
-    st.session_state.reasoning_fb = ""
-    st.session_state.submitted = False
-
-def unlock_evidence():
-    st.session_state.evidence_ok = False
-    st.session_state.evidence_fb = ""
-    st.session_state.reasoning_ok = False
-    st.session_state.reasoning_fb = ""
-    st.session_state.submitted = False
-
-def unlock_reasoning():
-    st.session_state.reasoning_ok = False
-    st.session_state.reasoning_fb = ""
+    st.session_state.last_feedback = ""
+    st.session_state.last_predicted = None
     st.session_state.submitted = False
 
 # ---------- Data & Figure ----------
@@ -223,37 +219,6 @@ def build_figure(df: pd.DataFrame):
 df = load_dataset()
 fig = build_figure(df)
 
-# ---------- GPT helpers ----------
-def gpt_eval_evidence(claim: str, text: str):
-    with st.spinner("Scoring evidence…"):
-        out = llm.step_feedback("evidence", claim, text)
-    label = (out.get("label") or "").lower()
-    if label not in llm.EVIDENCE_LABELS:
-        raise RuntimeError(f"Unexpected evidence label: {label}")
-    passed = (label == "supportive")
-    fb = out.get("step_feedback") or ("OK" if passed else "Please refine your evidence.")
-    conf = 0.0
-    try:
-        conf = float(out.get("confidence", 0) or 0)
-    except Exception:
-        pass
-    return {"passed": passed, "feedback": fb, "label": label, "confidence": conf}
-
-def gpt_eval_reasoning(claim: str, text: str):
-    with st.spinner("Scoring reasoning…"):
-        out = llm.step_feedback("reasoning", claim, text, evidence_text=st.session_state.evidence_text)
-    label = (out.get("label") or "").lower()
-    if label not in llm.REASONING_LABELS:
-        raise RuntimeError(f"Unexpected reasoning label: {label}")
-    passed = (label == "valid")
-    fb = out.get("step_feedback") or ("OK" if passed else "Please refine your reasoning.")
-    conf = 0.0
-    try:
-        conf = float(out.get("confidence", 0) or 0)
-    except Exception:
-        pass
-    return {"passed": passed, "feedback": fb, "label": label, "confidence": conf}
-
 # ---------- Layout ----------
 left, right = st.columns([1.2, 1.8], gap="large")
 
@@ -281,7 +246,14 @@ with right:
     if st.session_state.claim_radio is None:
         if st.session_state.claim == "agree": initial_idx = 0
         elif st.session_state.claim == "disagree": initial_idx = 1
-    claim_choice = st.radio("", [agree_text, disagree_text], index=initial_idx, key="claim_radio")
+
+    claim_choice = st.radio(
+        "Choose one",
+        [agree_text, disagree_text],
+        index=initial_idx,
+        key="claim_radio",
+        label_visibility="collapsed"
+    )
     if claim_choice is None:
         st.session_state.claim = None
         st.info("Please choose your claim to continue.")
@@ -291,7 +263,7 @@ with right:
         if st.session_state.prev_claim is not None and new_claim != st.session_state.prev_claim:
             st.session_state.claim = new_claim
             reset_after_claim_change(keep_text=True)
-            st.info("Claim changed. Evidence and Reasoning need to be re-checked.")
+            st.info("Claim changed. Your previous feedback is cleared (text kept).")
         else:
             st.session_state.claim = new_claim
         st.session_state.prev_claim = new_claim
@@ -302,108 +274,97 @@ with right:
     st.markdown('<div class="inst">Now present your evidence. Use the data from the table and chart to support your claim.</div>',
                 unsafe_allow_html=True)
     st.text_area(
-        "", key="evidence_text", height=150,
-        placeholder=('Write your evidence here. Then click "Get feedback" to see suggestions and refine. '),
-        disabled=st.session_state.evidence_ok,
+        "Evidence text",
+        key="evidence_text",
+        height=150,
+        placeholder='Write your evidence here.',
+        label_visibility="collapsed"
     )
-    c1, c2 = st.columns(2)
-    with c1:
-        ev_btn = st.button("Get feedback", key="ev_btn",
-                           disabled=st.session_state.evidence_ok, use_container_width=True)
-    with c2:
-        if st.session_state.evidence_ok:
-            st.button("Unlock Evidence to Edit", on_click=unlock_evidence,
-                      use_container_width=True,
-                      help="Editing evidence will also require re-checking your reasoning.")
-
-    if ev_btn:
-        try:
-            result = gpt_eval_evidence(st.session_state.claim, st.session_state.evidence_text)
-            st.session_state.evidence_ok = result["passed"]
-            st.session_state.evidence_fb = result["feedback"]
-            st.session_state.submitted = False
-            st.session_state.evidence_history.append({
-                "claim": st.session_state.claim,
-                "text": st.session_state.evidence_text.strip(),
-                "label": result["label"],
-                "confidence": result["confidence"],
-                "feedback": result["feedback"],
-                "passed": result["passed"],
-                "ts": datetime.now().isoformat(timespec="seconds"),
-            })
-            st.rerun()
-        except Exception as e:
-            st.error(f"Error while checking evidence: {e}")
-
-    if st.session_state.evidence_fb:
-        show_feedback_bar(st.session_state.evidence_fb, st.session_state.evidence_ok)
-
-    curr_claim = st.session_state.claim
-    ev_records = [r for r in st.session_state.evidence_history if r.get("claim") == curr_claim]
-    st.markdown("**Your Evidence Attempts & Feedback**")
-    other_ev = len(st.session_state.evidence_history) - len(ev_records)
-    if other_ev > 0:
-        st.caption(f"{other_ev} attempt(s) from the other claim are hidden.")
-    _render_evidence_history(ev_records, curr_claim.capitalize())
-
-    if not st.session_state.evidence_ok:
-        st.info("Refine your Evidence until it passes to unlock Reasoning.")
-        st.stop()
 
     # Step 3 — Reasoning
     st.divider(); st.subheader("3) Reasoning")
     st.markdown('<div class="inst">Describe how your evidence supports your claim. Use what you know about predators, prey, and ecosystem balance to explain how your data supports your claim.</div>',
                 unsafe_allow_html=True)
     st.text_area(
-        "", key="reasoning_text", height=160,
-        placeholder=('Write your reasoning here. Explain the mechanism that links your data to the claim. '
-                     'Then click "Get feedback" to see suggestions and refine.'),
-        disabled=st.session_state.reasoning_ok,
+        "Reasoning text",
+        key="reasoning_text",
+        height=160,
+        placeholder='Write your reasoning here.',
+        label_visibility="collapsed"
     )
-    d1, d2 = st.columns(2)
-    with d1:
-        rs_btn = st.button("Get feedback", key="rs_btn",
-                           disabled=st.session_state.reasoning_ok, use_container_width=True)
-    with d2:
-        if st.session_state.reasoning_ok:
-            st.button("Unlock Reasoning to Edit", on_click=unlock_reasoning, use_container_width=True)
 
-    if rs_btn:
-        try:
-            result = gpt_eval_reasoning(st.session_state.claim, st.session_state.reasoning_text)
-            st.session_state.reasoning_ok = result["passed"]
-            st.session_state.reasoning_fb = result["feedback"]
-            st.session_state.submitted = False
-            st.session_state.reasoning_history.append({
-                "claim": st.session_state.claim,
-                "text": st.session_state.reasoning_text.strip(),
-                "label": result["label"],
-                "confidence": result["confidence"],
-                "feedback": result["feedback"],
-                "passed": result["passed"],
-                "evidence": st.session_state.evidence_text.strip(),  # evidence snapshot
-                "ts": datetime.now().isoformat(timespec="seconds"),
-            })
+    # Unified feedback
+    st.divider()
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        run_btn = st.button("Get feedback (Evidence + Reasoning)", type="primary", use_container_width=True)
+    with c2:
+        if st.button("Clear feedback", use_container_width=True):
+            st.session_state.last_feedback = ""
+            st.session_state.last_predicted = None
             st.rerun()
+
+    if run_btn:
+        try:
+            curr_claim = st.session_state.claim
+            prior = [r for r in st.session_state.attempt_history if r.get("claim_choice") == curr_claim]
+
+            with st.spinner("Scoring your evidence + reasoning…"):
+                result = llm.evaluate_round(
+                    claim_choice=curr_claim,
+                    evidence_text=st.session_state.evidence_text,
+                    reasoning_text=st.session_state.reasoning_text,
+                    chat_history=prior
+                )
+
+            record = {
+                "ts": datetime.now().isoformat(timespec="seconds"),
+                "claim_choice": curr_claim,
+                "evidence_text": (st.session_state.evidence_text or "").strip(),
+                "reasoning_text": (st.session_state.reasoning_text or "").strip(),
+                "predicted_labels": result.get("predicted_labels"),
+                "evidence_info": result.get("evidence_info"),
+                "feedback": result.get("feedback", "").strip(),
+                "student_resp": result.get("student_resp", ""),
+            }
+            st.session_state.attempt_history.append(record)
+
+            st.session_state.last_feedback = record["feedback"]
+            st.session_state.last_predicted = record["predicted_labels"]
+            st.session_state.submitted = False
+
+            st.rerun()
+
+        except AttributeError:
+            st.error("llm.evaluate_round(...) not found. Next step: update llm.py to add evaluate_round.")
         except Exception as e:
-            st.error(f"Error while checking reasoning: {e}")
+            st.error(f"Error while scoring: {e}")
 
-    if st.session_state.reasoning_fb:
-        show_feedback_bar(st.session_state.reasoning_fb, st.session_state.reasoning_ok)
+    # Show latest feedback
+    if st.session_state.last_feedback:
+        passed = _passed_from_pred(st.session_state.last_predicted or {})
+        show_feedback_turns(st.session_state.last_feedback, passed=passed)
 
-    st.markdown("**Your Reasoning Attempts & Feedback**")
-    rs_records = [r for r in st.session_state.reasoning_history if r.get("claim") == curr_claim]
-    other_rs = len(st.session_state.reasoning_history) - len(rs_records)
-    if other_rs > 0:
-        st.caption(f"{other_rs} attempt(s) from the other claim are hidden.")
-    _render_reasoning_history(rs_records, curr_claim.capitalize())
+    # Show latest classification
+    if st.session_state.last_predicted:
+        st.markdown("**Classification Results (latest)**")
+        st.json(st.session_state.last_predicted)
+
+    # History (current claim only)
+    st.markdown("**Your Attempts & Feedback**")
+    curr_claim = st.session_state.claim
+    records = [r for r in st.session_state.attempt_history if r.get("claim_choice") == curr_claim]
+    other = len(st.session_state.attempt_history) - len(records)
+    if other > 0:
+        st.caption(f"{other} attempt(s) from the other claim are hidden.")
+    _render_attempt_history(records, curr_claim.capitalize())
 
     # Final submit
-    if st.session_state.evidence_ok and st.session_state.reasoning_ok:
-        st.divider()
-        if st.button("Submit", type="primary", use_container_width=True):
-            st.session_state.submitted = True
-            st.success("✅ Submitted! Your claim, evidence, and reasoning have been recorded.")
-            st.balloons()
+    st.divider()
+    if st.button("Submit", type="secondary", use_container_width=True):
+        st.session_state.submitted = True
+        st.success("✅ Submitted! Your response has been recorded.")
+        st.balloons()
+
     if st.session_state.submitted:
-        st.caption("Thanks! You can still read your feedback above.")
+        st.caption("Thanks! You can still revise and get feedback above.")

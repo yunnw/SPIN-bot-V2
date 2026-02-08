@@ -1,0 +1,109 @@
+task_name: heatisland
+
+task_context: |
+  #### Background Context
+  Students are learning about urban heat islands, phenomena whereby air temperatures are hotter in cities than surrounding areas. Urban heat islands happen because cities have fewer plants, trees, and bodies of water than the countryside. They also have more roofs, roads, and other had surfaces that absorb more of the sun's heat. Places with narrow streets and tall buildings can also restrict the cooling effect of wind. Urban heat islands can pose health risks by exposing people to illnesses like heat exhaustion and heat stroke. They can also harm the environment, especially when people need to use more air conditioning to lower the temperature.
+
+  Students reviewed data showing the average daytime and nighttime temperatures during the summer months of 2023 and 2024 for two cities in New Jersey: Newark (low tree coverage) and Haworth (high tree coverage).
+  Month & Year   | Daytime Temperature (F) Newark | Nighttime Temperature (F) Newark | Daytime Temperature (F) Haworth | Nighttime Temperature (F) Haworth
+  May 2023       | 96.0                           | 57.0                             | 81.6                            | 55.0
+  June 2023      | 101.0                          | 66.6                             | 87.7                            | 65.4
+  July 2023      | 116.4                          | 77.7                             | 93.1                            | 75.5
+  August 2023    | 97.5                           | 67.0                             | 85.3                            | 68.1
+  September 2023 | 94.4                           | 72.3                             | 83.9                            | 63.3
+  May 2024       | 93.6                           | 68.4                             | 79.3                            | 64.0
+  June 2024      | 108.2                          | 74.0                             | 91.0                            | 70.3
+  July 2024      | 107.3                          | 81.9                             | 92.4                            | 79.4
+  August 2024    | 101.4                          | 76.9                             | 86.8                            | 75.1
+  September 2024 | 90.7                           | 66.3                             | 77.4                            | 62.4
+
+  #### Student Question (Students are asked the following question to elicit scientific argumentation)
+  You have explored the temperature data from two New Jersey locations with varying amounts of tree coverage. Now make a claim about how tree coverage might affect temperature. Your response should include a claim, supporting data, and valid reasoning.
+
+claim_sides:
+  agree: "Tree coverage has a big impact on temperature."
+  disagree: "Tree coverage has little impact on temperature."
+
+reasoning_pattern_definitions:
+  relational_reasoning_def: ""
+  cause_effect_reasoning_def: ""
+
+few_shot:
+  evidence:
+    agree:
+      supportive:
+        - "In July 2023, Newark had a daytime temperature of 116.4°F, while Haworth had 93.1°F. This is a difference of 23.3°F, and Newark has much lower tree coverage."
+        - "In summer 2024, nighttime temperatures in Newark were consistently higher. For example, July 2024 nights were 81.9°F in Newark but only 79.4°F in Haworth."
+        - "Across all 10 months of data, Newark's daytime temperatures were always higher—by 10°F to over 20°F—than Haworth's."
+      non_supportive:
+        - "In September 2024, Newark was 90.7°F and Haworth was 77.4°F, so that proves trees don't matter because both cities were warm."
+        - "In May 2023, Haworth's nighttime temperature was 55°F, which shows cities cool down slower."
+        - "Newark stayed cooler than Haworth all summer, proving trees don't matter."
+    disagree:
+      supportive:
+        - "In July 2024, Haworth's nighttime temperature was 79.4°F, very close to Newark's 81.9°F, only a 2.5°F difference."
+        - "In June 2023, the nighttime temperatures were 66.6°F in Newark and 65.4°F in Haworth, which is only about a one-degree difference."
+        - "During May 2024, daytime temperatures were 93.6°F in Newark and 79.3°F in Haworth. Although different, both are still hot, suggesting other factors besides trees may matter more."
+      non_supportive:
+        - "In July 2023, Newark reached 116.4°F but Haworth only reached 93.1°F, a difference of over 23°F."
+        - "All ten months show Newark is hotter than Haworth during the day."
+        - "Haworth was hotter than Newark every month, so tree coverage clearly doesn't matter."
+
+  reasoning:
+    agree:
+      valid:
+        - "Areas with fewer trees absorb more heat because they have more dark surfaces like roads and roofs. Since Newark has lower tree coverage, it heats up more. This explains why Newark's temperature is over 20°F higher, showing trees play a big role in cooling."
+        - "Trees provide shade and reduce heat absorption by blocking sunlight from hitting surfaces. Since Haworth has more trees, those surfaces don't heat as much, explaining why it stays over 14°F cooler than Newark."
+        - "Areas with fewer trees release heat more slowly at night because surfaces like asphalt store heat during the day. This explains why Newark stays warmer even after sunset, showing trees influence both daytime and nighttime temperatures."
+      invalid:
+        - "Newark is hotter because it is closer to the equator, which has nothing to do with trees."
+        - "Newark is hotter because it probably rains less there, and rain makes places cooler."
+        - "Newark is hotter because it's a bigger city with more people, and people give off body heat."
+      noreasoning:
+        - "So this shows trees matter."
+        - "That's why tree coverage makes a big difference."
+        - "So trees clearly affect the weather."
+    disagree:
+      valid:
+        - "If tree coverage had a large impact, we would expect big temperature differences at night. But the temperatures are nearly the same, suggesting that tree coverage does not strongly affect nighttime cooling."
+        - "Because the temperature difference is small, it suggests that other factors—like wind patterns or regional weather—may play a bigger role than tree coverage, supporting that trees don't strongly affect the temperatures."
+        - "If tree coverage had a strong effect, we'd expect a large difference at night. But the small difference shows that nighttime temperatures are not heavily influenced by trees."
+      invalid:
+        - "Tree coverage doesn't matter much because both towns probably have the same number of people."
+        - "Trees don't matter much because both places are in New Jersey, and states usually have the same weather everywhere."
+        - "Trees don't impact temperature because summers are always hot no matter what."
+      noreasoning:
+        - "So that means trees don't change the temperature a lot."
+        - "That shows tree coverage doesn't change temperatures that much."
+        - "So tree coverage is not that important."
+
+  pattern:
+    any:
+      relational:
+        - "Newark has higher temperatures than Haworth in every month, and Newark also has fewer trees."
+        - "In July 2023, Newark was over 20 degrees hotter than Haworth, and Newark has much lower tree coverage."
+        - "In several months, Newark and Haworth have similar nighttime temperatures, and these months also show differences in tree coverage."
+        - "In June 2023 the nighttime temperatures are only about a degree apart, even though the cities have different amounts of tree coverage."
+      cause_effect:
+        - "Trees block sunlight and reduce heat absorption. Because Newark has fewer trees, more sunlight reaches streets and buildings, causing its temperatures to rise much higher than Haworth's."
+        - "Trees release moisture through transpiration, which cools the surrounding air. Since Haworth has more trees, this cooling effect lowers its temperature compared to Newark."
+        - "Nighttime temperatures are controlled more by how long surfaces hold heat than by tree coverage. Since both places cool at similar rates overnight, the small temperature difference suggests trees don't strongly influence nighttime cooling."
+        - "Factors like regional weather patterns and humidity can moderate temperatures. Because these broader factors affect both cities the same way, the tree coverage difference doesn't cause a large temperature change."
+
+  feedback: |
+    Evidence,Reasoning,Reasoning Pattern,Feedback Examples
+    None,None,N/a,"Turn 1: I see that you selected a claim.\nTurn 2: Can you look for temperature data from 2023-2024 that might help show how temperatures changed in Newark or Haworth?"
+    None,Supportive,Relational,"Turn 1: I like how you noticed connections between things like tree coverage, buildings, and temperature.\nTurn 2: Could you point to the specific temperatures in the table where this relationship shows up?\nTurn 3: What do you think might explain that relationship?"
+    None,Supportive,Cause-Effect,"Turn 1: You're using good reasoning ideas, like how trees provide shade or how roads absorb heat.\nTurn 2: Can you find a month in the table that shows cooler temperatures where there are more trees?"
+    None,Non-supportive,Relational,"Turn 1: You noticed a pattern, but it doesn't quite fit your claim yet.\nTurn 2: If you think tree coverage affects temperatures, does the data actually show lower temperatures where tree coverage is higher?"
+    None,Non-supportive,Cause-Effect,"Turn 1: You are thinking about causes, which is great.\nTurn 2: But does the temperature data support the cause you mentioned? For example, does the place with more trees actually stay cooler?"
+    Supportive,None,N/a,"Turn 1: Good job using temperature data from Newark and Haworth.\nTurn 2: How does the data help support your claim?\nTurn 3: You could also describe how one factor (like tree coverage) relates to another (like daytime heat)."
+    Supportive,Supportive,Relational,"Turn 1: Nice work! Your data support the selected claim.\nTurn 2: What do you think caused that pattern?\nTurn 3: For example, how might the differences in tree coverage relate to the temperature differences you found?"
+    Supportive,Supportive,Cause-Effect,"Turn 1: Excellent! You explained what happens and why!\nTurn 2: You could even go further and predict what might happen if a city added more tree coverage to reduce heat."
+    Supportive,Non-supportive,Relational,"Turn 1: Great job choosing useful temperature data.\nTurn 2: But your explanation doesn't quite match what the numbers show.\nTurn 3: When tree coverage increases, do temperatures go down or stay the same according to the data?"
+    Supportive,Non-supportive,Cause-Effect,"Turn 1: I like how you're thinking about why temperatures might change.\nTurn 2: But do the numbers actually show the effect you described—for example, cooler temperatures where there are more trees?"
+    Non-supportive,None,N/a,"Turn 1: I see you used temperature data, but they don't seem to match the claim you selected.\nTurn 2: Would another part of the temperature table fit your claim better?"
+    Non-supportive,Supportive,Relational,"Turn 1: Nice job describing how things (like tree coverage and temperatures) are related.\nTurn 2: But the relationship you identified doesn't support your claim yet. Try finding data that does.\nTurn 3: Then think about why that relationship might happen."
+    Non-supportive,Supportive,Cause-Effect,"Turn 1: Great that you're thinking about why temperatures change.\nTurn 2: But does the temperature data actually show the cause-and-effect relationship you described?"
+    Non-supportive,Non-supportive,Relational,"Turn 1: I see you're trying to describe a pattern, which is a strong start.\nTurn 2: It might help to pick one clear trend—for example, what happens to temperatures in months where tree coverage is low?"
+    Non-supportive,Non-supportive,Cause-Effect,"Turn 1: You're already thinking about why temperatures change, and that's great.\nTurn 2: But your explanation doesn't match the data yet. For example, do temperatures stay hotter in places with fewer trees?\nTurn 3: WWhat could that tell you about how tree coverage affects city temperature?"
