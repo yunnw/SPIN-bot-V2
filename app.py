@@ -118,7 +118,7 @@ def _passed_from_pred(pred: dict) -> bool:
         return True
     ev = (pred.get("evidence") or "").lower()
     rs = (pred.get("reasoning") or "").lower()
-    return ("supportive" in ev) and ("supportive" in rs or "valid" in rs)
+    return ("supportive" in ev) and ("valid" in rs)
 
 def _render_attempt_history(records, claim_label: str):
     if not records:
@@ -307,14 +307,28 @@ with right:
     if run_btn:
         try:
             curr_claim = st.session_state.claim
-            prior = [r for r in st.session_state.attempt_history if r.get("claim_choice") == curr_claim]
+
+            # Build chat_history for this claim with round_index
+            prior = []
+            claim_count = 0
+            for r in st.session_state.attempt_history:
+                if r.get("claim_choice") == curr_claim:
+                    claim_count += 1
+                    prior.append({
+                        "round_index": claim_count,
+                        "student_resp": r.get("student_resp", ""),
+                        "predicted_labels": r.get("predicted_labels", {}),
+                        "evidence_info": r.get("evidence_info"),
+                        "reasoning_info": r.get("reasoning_info"),
+                        "feedback": r.get("feedback", ""),
+                    })
 
             with st.spinner("Scoring your evidence + reasoning…"):
                 result = llm.evaluate_round(
                     claim_choice=curr_claim,
                     evidence_text=st.session_state.evidence_text,
                     reasoning_text=st.session_state.reasoning_text,
-                    chat_history=prior
+                    chat_history=prior,
                 )
 
             record = {
@@ -324,6 +338,7 @@ with right:
                 "reasoning_text": (st.session_state.reasoning_text or "").strip(),
                 "predicted_labels": result.get("predicted_labels"),
                 "evidence_info": result.get("evidence_info"),
+                "reasoning_info": result.get("reasoning_info"),
                 "feedback": result.get("feedback", "").strip(),
                 "student_resp": result.get("student_resp", ""),
             }
@@ -336,7 +351,7 @@ with right:
             st.rerun()
 
         except AttributeError:
-            st.error("llm.evaluate_round(...) not found. Next step: update llm.py to add evaluate_round.")
+            st.error("llm.evaluate_round(...) not found. Check that llm.py is updated.")
         except Exception as e:
             st.error(f"Error while scoring: {e}")
 

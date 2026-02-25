@@ -1,0 +1,117 @@
+task_name: ladybug
+
+task_context: |
+  #### Background Context
+  Students are learning about plans and how they grow. Their teacher started a garden, and one of the plans is the chrysanthemum or mum flower. After a few weeks, they noticed that some plants aren't growing well. The class discovered tiny insects called aphids are harming the plants. Aphids suck the sap from the leaves, which the plant needs to grow. This damages the leaves and makes it harder for the mum flowers to stay healthy. The teacher explains that they can introduce ladybugs to the flower pots with the mum flowers. Ladybugs are natural predators that eat aphids. The class decides to conduct an experiment to understand whether introducing ladybugs will reduce the aphid population. The class obtains two flowerpots of mums. Both pots are infested with aphids. The pots are placed in the garden, in two separate locations.  These pots remain in their locations for 4 days. The only difference in the two pots is the addition of Ladybugs on Day 2 to only one of the aphid-infested pots.
+
+  Below is data from the experiment, comparing the average number of aphids per leaf on Day 1 and Day 4:
+  Day | Average number of aphids - pot without ladybugs | Average number of aphids - pot with ladybug
+  1   | 200                                             | 150
+  4   | 150                                             | 25
+
+  The class notices another trend in the pot where the ladybugs were added. As time passes, the number of ladybugs in that one flowerpot has changed. This trend is shown in the data below.
+  Day | Ladybugs per pot
+  1   | 14
+  2   | 11
+  3   | 8
+  4   | 9
+  5   | 6
+  6   | 3
+  7   | 1
+
+  Upon further investigation, the class observes something else: On day 7, they notice that many of the ladybugs have started to fly away, but there are also some dead ladybugs in the pot.
+
+  #### Student Question (Students are asked the following question to elicit scientific argumentation)
+  Use the experiment's data to write your scientific argument to answer the question: How does the decrease in aphids impact the number of ladybugs? Your response should include a claim, supporting data, and valid reasoning.
+
+claim_sides:
+  agree: "The decrease in aphids leads to the decrease in ladybugs."
+  disagree: "The decrease in aphids does not directly impact the number of ladybugs."
+
+reasoning_pattern_definitions:
+  relational_reasoning_def: ""
+  cause_effect_reasoning_def: ""
+
+few_shot:
+  evidence:
+    agree:
+      supportive:
+        - "From Day 1 to Day 4, the aphids in the pot with ladybugs dropped from 150 to 25. Over the same time, the number of ladybugs decreased too, going from 14 on Day 1 to 9 on Day 4. This shows both aphids and ladybugs decreased."
+        - "By Day 7, the aphids stayed low at 25, and the ladybugs went down to only 1. Since the food source went down first and then the ladybugs went down, this supports that fewer aphids caused fewer ladybugs."
+        - "The data shows that when aphids dropped from 150 to 25, the ladybugs dropped from 14 to 1. Ladybugs might be leaving because there isn't enough food."
+      non_supportive:
+        - "The aphids went up when the ladybugs went down."
+        - "The number of ladybugs increased from Day 1 to Day 7, showing they are not affected by aphids."
+        - "The pot without ladybugs had fewer aphids, so ladybugs do not depend on the aphids."
+    disagree:
+      supportive:
+        - "Ladybugs decreased even on days when the aphid data didn't change. For example, from Day 1 to Day 4 ladybugs dropped every day, even though aphid numbers were only measured on Day 1 and Day 4. This shows ladybugs might be decreasing for reasons we didn't measure."
+        - "On Day 4, the ladybugs go up from 8 to 9 even though aphids had already dropped a lot. This means ladybugs didn't always go down when aphids went down."
+        - "By Day 7, there were dead ladybugs and ladybugs flying away. These observations show other factors like dying or leaving the pot could cause the decrease, not just the aphids."
+      non_supportive:
+        - "Because the aphids dropped from 150 to 25 and the ladybugs dropped from 14 to 1, this proves aphids caused the ladybug decrease."
+        - "Ladybugs stayed the same even though aphids changed."
+        - "The pot without ladybugs also lost ladybugs, so aphids don't matter."
+
+  reasoning:
+    agree:
+      valid:
+        - "Ladybugs eat aphids, so when the aphids go down from 150 to 25, there is less food for the ladybugs. Because they didn't have enough food, the ladybugs started to die or fly away. That explains why their numbers dropped from 14 to 1."
+        - "In ecosystems, predators depend on their prey to survive. When the aphid population decreased, the ladybugs didn't have enough prey to eat. That is why their population also decreased over the week."
+        - "Since aphids are the ladybugs' food source, the decrease in aphids caused the ladybugs to leave or die. Predators can't stay where there isn't enough food."
+      invalid:
+        - "The ladybugs decreased because they don't like living in flowerpots."
+        - "The ladybugs left because the weather was too hot."
+        - "Ladybugs decrease whenever plants grow taller, so that's why they went down."
+      noreasoning:
+        - "The aphids went down and the ladybugs went down, so they must be related."
+        - "The numbers both decreased, so that explains it."
+        - "The ladybugs decreased after the aphids did, which shows my claim is right."
+    disagree:
+      valid:
+        - "Even though aphids decreased, the ladybugs were also seen flying away and some were dead by Day 7. This shows that factors like leaving the pot or dying for other reasons can change their numbers, not just the aphid amount."
+        - "Ladybugs went down every day even on days when the class didn't measure aphids. Their decrease didn't always match changes in aphids, so other factors like habitat or lifespan might be affecting them."
+        - "On Day 4 the ladybugs went up from 8 to 9 even though aphids were already very low. This means ladybug numbers can change for reasons other than aphid levels."
+      invalid:
+        - "Ladybugs don't eat aphids, so the aphid number doesn't matter."
+        - "The ladybugs decreased because plants need more sunlight."
+        - "The ladybugs decreased because they were scared of the aphids."
+      noreasoning:
+        - "The ladybugs decreased for reasons other than aphids."
+        - "Ladybugs went down even though aphids were low, so my claim is right."
+        - "Ladybugs changed on days without aphid data, so this shows something else happened."
+
+  pattern:
+    any:
+      relational:
+        - "When the number of aphids went down, the number of ladybugs also went down."
+        - "The data shows that as aphids decreased from 150 to 25, ladybugs decreased from 14 to 1."
+        - "There were fewer aphids over time, and the ladybug numbers dropped during that same time."
+        - "The ladybugs decreased over time even though we only measured aphids on Day 1 and Day 4."
+        - "Some ladybugs were flying away and some were dead, while aphid numbers stayed low."
+        - "Ladybugs went down every day, but aphids only changed between Day 1 and Day 4."
+      cause_effect:
+        - "Ladybugs need aphids for food, so when the aphids decreased, the ladybugs didn't have enough to eat. This caused the ladybugs to die or fly away, leading to fewer ladybugs."
+        - "Because aphids are the ladybugs' prey, the drop in aphids reduces the food supply. With less food, ladybugs cannot survive or stay in the pot, so their numbers decrease."
+        - "Aphids are the main energy source for the ladybugs. When the aphid population shrank, the ladybugs couldn't get enough energy to survive or reproduce, causing their population to shrink too."
+        - "The ladybugs decreased because many of them flew away or died, as observed on Day 7. This shows that other causes, not the aphid decrease, led to fewer ladybugs."
+        - "Ladybugs went down even on days when aphid numbers weren't changing, so factors like their short lifespan or needing a bigger habitat caused their decline, not the aphid decrease."
+        - "The number of ladybugs briefly increased from Day 3 to Day 4 even though aphids were already low. This shows that low aphid numbers were not the direct cause of the ladybug changes."
+
+  feedback: |
+    Evidence,Reasoning,Reasoning Pattern,Feedback Examples
+    None,None,N/a,"Turn 1: I see that you picked a claim.\nTurn 2: Can you find any data from Days 1-4 that show what happened to the aphids or ladybugs in the pots?"
+    None,Supportive,Relational,"Turn 1: I like how you mentioned a relationship between aphid numbers and ladybug numbers.\nTurn 2: Could you point to where in the data you see that pattern?\nTurn 3: What do you think might explain this relationship?"
+    None,Supportive,Cause-Effect,"Turn 1: You have some great reasoning ideas, like how predators might affect prey.\nTurn 2: Can you find a specific day in the table that shows a change in aphids after the ladybugs were added?"
+    None,Non-supportive,Relational,"Turn 1: You noticed a pattern, but it doesn't quite match your claim yet.\nTurn 2: If you think ladybugs affected the aphid population, does the data actually show aphids changing after Day 2?"
+    None,Non-supportive,Cause-Effect,"Turn 1: You are thinking about causes, which is great.\nTurn 2: But does the data support that idea? For example, do the numbers show ladybugs causing the pattern you described?"
+    Supportive,None,N/a,"Turn 1: Good job using data from the flowerpot experiment.\nTurn 2: How does the data help support your claim?\nTurn 3: You could also describe how one group affects another, like what happens to ladybugs when aphids decrease."
+    Supportive,Supportive,Relational,"Turn 1: Nice work! Your data support the claim you selected.\nTurn 2: What do you think caused that pattern?\nTurn 3: For example, how might having fewer aphids affect how many ladybugs can stay in the pot?"
+    Supportive,Supportive,Cause-Effect,"Turn 1: Excellent! You explained what happens and why.\nTurn 2: You might even predict what would happen on Day 8 if aphid numbers stayed low—what would that mean for the ladybugs?"
+    Supportive,Non-supportive,Relational,"Turn 1: Good job choosing useful data.\nTurn 2: But your explanation doesn't quite match what the numbers show.\nTurn 3: For example, when ladybugs were added, did aphids go down or stay the same?"
+    Supportive,Non-supportive,Cause-Effect,"Turn 1: I like how you are thinking about why things happen between aphids and ladybugs.\nTurn 2: But do the numbers actually show that effect? For example, did ladybugs increase when aphids decreased?"
+    Non-supportive,None,N/a,"Turn 1: I see you used some data, but it doesn't seem to match the claim you chose.\nTurn 2: Is there another part of the data table that fits your claim better?"
+    Non-supportive,Supportive,Relational,"Turn 1: Nice that you described how two parts of the system are related.\nTurn 2: But the pattern you mentioned doesn't support your claim. See if you can find data that does match your idea.\nTurn 3: Then think about why that relationship happens."
+    Non-supportive,Supportive,Cause-Effect,"Turn 1: Great that you are thinking about why things happen in the ecosystem.\nTurn 2: Does the data actually show that pattern?"
+    Non-supportive,Non-supportive,Relational,"Turn 1: I see you're trying to describe a relationship, which is a good start.\nTurn 2: It might help to pick one clear trend. For example, what happens to aphid numbers after ladybugs are added on Day 2?"
+    Non-supportive,Non-supportive,Cause-Effect,"Turn 1: You are already thinking about causes, which is great.\nTurn 2: But the data doesn't quite support the story you described. For example, do the ladybugs decrease even when aphids are still low?\nTurn 3: What could that tell you about what else affects the ladybug population?"

@@ -1,0 +1,99 @@
+task_name: rootworm
+
+task_context: |
+  #### Background Context
+  Students are part of their school's environmental club and are trying to maintain a healthy garden. They observed corn rootworms damaging their corn and introduced harvest spiders as a natural predator. However, adult rootworms lay eggs, which leads to an increase in the rootworm population.
+  Below is real-world data from a farm facing similar problems:
+  Year | Corn Planted | Corn Harvested | Harvest Spiders | Rootworm Eggs Initial | Rootworm Eggs Final  
+  ---- | ------------- | --------------- | ---------------- | ---------------------- | ---------------------
+  1    | 130           | 130             | 0                | 0                      | 0  
+  2    | 130           | 97              | 0                | 18                     | 53  
+  3    | 130           | 81              | 10               | 29                     | 89  
+  4    | 130           | 84              | 10               | 41                     | 89  
+  5    | 130           | 80              | 10               | 41                     | 100  
+
+  #### Student Question (Students are asked the following question to elicit scientific argumentation)
+  One of your classmates found actual data collected from a corn farm that was facing a rootworm infestation, just like the garden in your school. Based on this data, some of your classmates predict that if they continue adding 10 harvest spiders, it will help improve the corn harvest in Year 6. Do you agree or disagree with this prediction? Analyze the data trend and make your own prediction about the Year 6 corn harvest. Your response should include a claim, supporting data, and valid reasoning.
+
+claim_sides:
+  agree: "I agree that continuing to add 10 harvest spiders will help improve the corn harvest in year 6."
+  disagree: "I disagree that continuing to add 10 harvest spiders will help improve the corn harvest in year 6."
+
+reasoning_pattern_definitions:
+  relational_reasoning_def: "The response must mention rootworms/rootworm eggs."
+  cause_effect_reasoning_def: ""
+
+few_shot:
+  evidence:
+    agree:
+      supportive:
+        - "because when people added 10 harvest spiders, the final amount of eggs seemed to stay as the same amount for 2 years straight. It also seems that after those two years with the same final amount of eggs, there would only be 11 more counted in the final egg count. The trend of the final amount of eggs has been slowly stopping, and the same is happening for the initial amount of rootworm eggs. The amount of corn harvested has almost stopped decreasing, and is likely going to start rising."
+        - "I believe this because the data in the chart shows that the number of corn harvested is decreasing, year by year. Year 1 shows that there were no rootworms what so ever and it was the only year where all the corn that was planted, was harvested. However, in year 2, this decreased significantly"
+        - "the data shows that between years 3 and 4 the same amount of spiders and different amounts of rootworms being added, with there being 10 spiders in both years 3 and 4, and 29 rootworms in year 3, but a larger amount of 41 rootworms in year 4. in both years, the final amount of harvested rootworm eggs was 89, showing that the spiders did their job  in preventing more rootworms from reproducing, especially when more rootworms were originally present in year 4. the graph shows this in a more noticeabel way visually, helping to outline the difference in population change during the years without the spiders being introduced and then years including the spiders being a part of the overall population."
+      non_supportive:
+        - "I believe this because the data in the chart shows that the number of corn harvested is decreasing, year by year. Year 1 shows that there were no rootworms what so ever and it was the only year where all the corn that was planted, was harvested. However, in year 2, this decreased significantly."
+        - "Some supporting data is as you can see data for the relationship between the harvest spiders and rootworms impacting the corn plants."
+    disagree:
+      supportive:
+        - "For example, in the graph and table the number of corn harvested was decreasing dramaically as the population of rootworms were increasing. However, when harvest spiders were added the numer of plants were still decreasing, but not as much. Moreover, the number of corn harvested was still decreasing, but not as much compaerd to when there are harvest spiders."
+        - "Based on the data, I can see that after consistently adding 10 harvest spiders from year 3, the number of corn harvested has been decreasing. The number of rootworms eggs increases, therefore displaying how adding harvest spiders was not as effective."
+        - "Looking that the first graph, I see that the initial amount of corns planted is 130 and the initial rootworm eggs is 18. Then, the final number of corns harvested is 97, while the final amount of rootworm eggs is 53."
+        - "This is because the amount of corn harvested each year is going down even when there are ten harvest spiders.  Additionally, the number of spiders only being ten would most likely be the reason why it isn't affecting the number of rootworms as much because there are 130 corn and more than double the amount of rootworms than harvest spiders so only having ten would not be very effective."
+      non_supportive:
+        - "The data shows that in year 3, when spiders were added, the number of rootworm eggs was 29, and the corn harvested was 91."
+        - "the chart shows that the number of harvest spiders stayed the same for three years, but the corn harvest only dropped by a few plants each year. This means that the spiders are causing the corn to decrease, even though the rootworm eggs are also increasing."
+
+  reasoning:
+    agree:
+      valid:
+        - "This supports my claim, because when spiders appeared, the amount of eggs appearing stopped going up. Also, the opposite of what happened to eggs happened to corn when the spiders appeared. This means that the amount of corn harvested is about to stop decreasing. I think that the Year 6 corn harvest will yield more corn then before, because in the data, the amount of corn harvested is about to stop decreasing. This means that the amount of corn will most likely start to increase in Year 6."
+        - "I think that adding the spiders would help with improving the corn harvest, because the spiders would consume more rootworms, leaving fewer available to prey on the corn, and hopefully preventing the rootworms from consuing the corn."
+        - "Now, one might say that the years with the harvest spiders, were much lower than the years without but, I strongly believe that it's because the years there were no harvest spiders, the rootworms become inhabited to the area."
+        - "i think that this is because the spiders consumed the rootworms, preventing them from reproducing more than they had the means to."
+      invalid:
+        - "Some reasoning is how harvest spiders might impacts rootsworms, so this supports my claim, by showing and explaining it too about these ideas."
+        - "reasining is that it takes one spider to tkae out on worm."
+      noreasoning:
+        - "I think my claim suppoorts this because it shows this on the chart, and It shows and explains us too."
+        - "Some reasoning is how harvest spiders might impacts rootsworms, so this supports my claim, by showing and explaining it too about these ideas."
+    disagree:
+      valid:
+        - "Continuing to add 10 harvest spiders will not help improve the corn harvest, but it will stop the harvest of corn from decreasing dramatically... The harvest spiders do not help improve the number of plants harvested, but it will help maintain a decent amount of corn being harvested."
+        - "This shows that despite having added harvest spiders to the cornfield, the number of corn harvested was already decreasing. The number of rootworms eggs increases, therefore displaying how adding harvest spiders was not as effective. The corn harvest will most likely decrease for year 6."
+        - "The 10 harvest spiders have not affected the increase in rootworm eggs greatly, and the final number of corns still went down as the number of rootworm eggs increased."
+        - "This shows how the harvest spiders don't improve the corn harvest because the amount of rootworms is increasing even with the harvest spiders in the corn crop."
+      invalid:
+        - "Some reasoning is how harvest spiders might impacts rootsworms, so this supports my claim, by showing and explaining it too about these ideas."
+        - "reasining is that it takes one spider to tkae out on worm."
+      noreasoning:
+        - "I think my claim suppoorts this because it shows this on the chart, and It shows and explains us too."
+        - "Some reasoning is how harvest spiders might impacts rootsworms, so this supports my claim, by showing and explaining it too about these ideas."
+
+  pattern:
+    any:
+      relational:
+        - "This data sets shows that having 10 harvest spider will only bring about reduction in cirn harvested. rather, a reduction in harvester spider should be simulated to know if there wil be more corn to harvest just like year 2 when there was no harvest spider with presence of 18 rootworm egg, harvest was up to 97 out of 130. This can likely be said to be sceince of predator and prey."
+        - "No, adding harvest spiders will not help inprove the corn harvest. One way that it won't is because when they added 10 for the second time and third the numbers kept on going down for the corn. Another piece of evidence is that when it was the last two turns the rootworms were both 41 and they went up from 89 one year to 100 the next year. This relates to my claim because the they had the same amount of corn planted and the same amount of rootworms planted for the last two years and the rootworms expanded more while the corn decreased only when adding the 10 harvest spiders. Also the rootworms went up a lot faster than the corn throughout the years."
+        - "I think that continuing to add 10 harvest spiders will not help improve corn harvest in year 6 because when they added the spiders before, the number of final eggs continued to increase while the number of corn harvested decreased. When you look at the table, you see that they started adding harvest spiders in year 3, however the amount of rootworm eggs in the end continues to increase. It increases from 53-89. Also, when you look at the number of corn harvested, the value continues to decrease. This means that adding harvest spiders does not have too large of an impact that saves the crops from the rootworms. Also, when you look at the graph, when harvest spiders start being introduced, the amount of initial rootworm eggs is still increasing, aswell as the amount of final rootworm eggs, while the amount of corn harvested continues to decrease. This means that the introduction of harvest spiders is not stopping the rootworms from affecting the corn harvest. In conclusion, this means that the harvest spiders will not help improve corn harvest in year 6."
+      cause_effect:
+        - "I think that there isn't enough harvest spiders to restrict the rootworm eggs from multiplying. Although the spiders are somewhat helping, they need enough to consume all the rootworms. on year 4 and 5, they put the smae amought of spiders and started with the same amought of rootworms. Some of the differences in year 4 and 5 are that in year 4, there were less rootworm eggs comared to year five. The numer of corn harvested also declines wwhen there are more eggs. The harvest spiders didn't seem to help the rootworms much in year three becuase even thoguh there were more rootworms initailly, there were less harvested crops. This showed that the harvest spiders might not be working."
+        - "I think that the farm should add more spiders in year six such as 13-15 spiders. I think this becaus the rootworm population trend seen to be going up.  Becaus ethe population is going up we need to add more spiders to kill of the rootworms at the farm. When the farm first introduced spiders to the land the startintg rootworm eggs was 29. At the end of the year it was 89. In year 4 they started with 41 and ended with 89. In year 5 they started with 41 and ended with 100 eggs. See how the population keeps going up? That is why we need more spiders."
+        - "Adding 10 harvest spiders will not improve the corn harvest in Year 6. This is because the amount of corn harvested each year is going down even when there are ten harvest spiders. Furthermore, the graph shows how the number of corn harvested is decreasing every year while the number of rootworm eggs is increasing every year and the amount of harvest spiders stays the same. This shows how the harvest spiders don't improve the corn harvest because the amount of rootworms is increasing even with the harvest spiders in the corn crop. Additionally, the number of spiders only being ten would most likely be the reason why it isn't affecting the number of rootworms as much because there are 130 corn and more than double the amount of rootworms than harvest spiders so only having ten would not be very effective."
+
+  feedback: |
+    Evidence,Reasoning,Reasoning Pattern,Feedback Examples
+    None,None,N/a,"Turn 1: I see that you picked a claim.\nTurn 2: Can you find any data from Year 2-5 from the cornfield that help show what happened to the corn or the rootworms?"
+    None,Supportive,Relational,"Turn 1: I like how you mentioned how things are connected, like harvest spiders, rootworms, and corn.\nTurn 2: Could you show where in the data that happens?\nTurn 3: What do you think might explain this?"
+    None,Supportive,Cause-Effect,"Turn 1: You have some great reasoning, like harvest spiders eating rootworms.\nTurn 2: Can you find a year in the table that shows fewer rootworms when more spiders were added?"
+    None,Non-supportive,Relational,"Turn 1: You noticed a pattern, but it doesn't quite fit your claim yet.\nTurn 2: If you think harvest spiders helped with corn harvest, does the data actually show corn increasing after spiders were added?"
+    None,Non-supportive,Cause-Effect,"Turn 1: You are thinking about causes, which is great.\nTurn 2: But does the data agree with your story? Did adding harvest spiders really make corn harvest go up?"
+    Supportive,None,N/a,"Turn 1: Good job using data from the cornfield.\nTurn 2: How does the data help support your claim?\nTurn 3: You could describe how one group affects another, like what happens to corn when harvest spiders were added."
+    Supportive,Supportive,Relational,"Turn 1: Nice work! Your data support the selected claim.\nTurn 2: What do you think caused that?\nTurn 3: E.g., did having only 10 spiders affect how many rootworms survived?"
+    Supportive,Supportive,Cause-Effect,"Turn 1: Excellent! You explained what happens and why!\nTurn 2: You may even go further to predict what will happen in Year 6 if the farmer adds more than 10 spiders."
+    Supportive,Non-supportive,Relational,"Turn 1: Good job choosing useful data.\nTurn 2: But the explanation doesn't quite match what the numbers show though.\nTurn 3: When harvest spiders were added, did corn go up or keep going down?"
+    Supportive,Non-supportive,Cause-Effect,"Turn 1: I like how you reason about how spiders affect rootworms.\nTurn 2: But do the numbers show the effect? E.g., did rootworm eggs actually go down when harvest spiders were added?"
+    Non-supportive,None,N/a,"Turn 1: I see you used some data from the cornfield, but they don't seem to match the selected claim.\nTurn 2: Would another part of the data table fit better?"
+    Non-supportive,Supportive,Relational,"Turn 1: Nice that you described how things are related.\nTurn 2: But the pattern you mentioned doesn't support the selected claim. Check if you can find data that support your claim.\nTurn 3: Then think about why that relationship happens."
+    Non-supportive,Supportive,Cause-Effect,"Turn 1: Great that you are thinking about why things happen.\nTurn 2: Does the data actually show that?"
+    Non-supportive,Non-supportive,Relational,"Turn 1: I see you are trying to describe a relational pattern, which is great.\nTurn 2: It might help to pick one clear trend. E.g., what happens to rootworm eggs when harvest spiders were added?"
+    Non-supportive,Non-supportive,Cause-Effect,"Turn 1: You are already thinking about why, which is great.\nTurn 2: But the data doesn't quite fit. Maybe check if the corn harvest still dropped after harvest spiders stayed the same?\nTurn 3: What could that tell you about how many spiders the farmer might need?"
